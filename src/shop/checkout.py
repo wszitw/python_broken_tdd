@@ -17,6 +17,14 @@ TIER_DISCOUNTS = ((10, 5), (25, 10), (50, 15))
 REQUIRED_LINE_KEYS = ("sku", "qty", "unit_price_kopecks")
 
 
+def _is_int_text(value: str) -> bool:
+    """Check whether `int()` would parse the value, without catching exceptions."""
+    text = value.strip()
+    if text[:1] in ("+", "-"):
+        text = text[1:]
+    return text != "" and all(part.isascii() and part.isdigit() for part in text.split("_"))
+
+
 def validate_order(
     lines: list[dict[str, str]],
     promo_code: str = "",
@@ -32,6 +40,8 @@ def validate_order(
                 return f"missing key in line {index}"
         if not raw["sku"]:
             return "empty sku"
+        if not _is_int_text(raw["qty"]):
+            return "invalid qty"
     return None
 
 
