@@ -82,12 +82,16 @@ def test_duplicate_sku_is_rejected() -> None:
 
 def test_unknown_promo_code_is_rejected() -> None:
     """Spec 3, rule 9: only codes from PROMO_CODES exist."""
-    ...
+    reason= validate_order([line()], promo_code="UNKNOWN")
+    assert isinstance(reason, str) and reason
+    assert calculate_order_total([line()], promo_code="UNKNOWN") is None
 
 
 def test_unsupported_city_is_rejected() -> None:
     """Spec 3, rule 10: only cities from SUPPORTED_CITIES are served."""
-    ...
+    reason = validate_order([line()], shipping_city = "unsupported")
+    assert isinstance(reason, str) and reason
+    assert calculate_order_total([line()], shipping_city = "unsupported") is None
 
 
 def test_valid_order_passes_validation() -> None:
