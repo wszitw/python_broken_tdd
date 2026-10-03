@@ -24,6 +24,8 @@ def validate_order(
 ) -> str | None:
     """Return a human readable reason why the order is invalid, or None if it is fine."""
     # Only the happy path exists yet: rejection rules arrive one by one with later tests.
+    if not lines:
+        return "empty order"
     return None
 
 
