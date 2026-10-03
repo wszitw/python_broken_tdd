@@ -96,12 +96,17 @@ def test_unsupported_city_is_rejected() -> None:
 
 def test_valid_order_passes_validation() -> None:
     """Spec 3: a good order gets None back instead of a reason."""
-    ...
+    reason = validate_order([line(), line(sku="SKU2", qty="2", unit_price_kopecks="20000")], promo_code="WELCOME10", shipping_city="msk")
+    assert reason is None
+    assert calculate_order_total([line(), line(sku="SKU2", qty="2", unit_price_kopecks="20000")], promo_code="WELCOME10", shipping_city="msk") is not None
+
 
 
 def test_no_discount_below_first_tier() -> None:
     """Spec 4, steps 1-2: 9 units are below every threshold."""
-    ...
+    reason = validate_order([line(qty="9")])
+    assert reason is None
+    assert calculate_order_total([line(qty="9")]) == 108_000
 
 
 def test_tier_discount_at_first_threshold() -> None:
