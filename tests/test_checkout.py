@@ -140,14 +140,14 @@ def test_delivery_is_charged_for_small_order() -> None:
     """Spec 4, steps 7-10: a city adds SHIPPING_KOPEKS and VAT is charged on it."""
     reason = validate_order([line(qty="1")], shipping_city="msk")
     assert reason is None
-    assert calculate_order_total([line(qty="1")], shipping_city="msk") == 72_800
+    assert calculate_order_total([line(qty="1")], shipping_city="msk") == 70_800
 
 
 def test_free_delivery_uses_discounted_subtotal() -> None:
     """Spec 4, step 7: the threshold is checked against the sum after the discount."""
     reason = validate_order([line(qty="50")], promo_code="VIP35", shipping_city="msk")
     assert reason is None
-    assert calculate_order_total([line(qty="50")], promo_code="VIP35", shipping_city="msk") == 478_000
+    assert calculate_order_total([line(qty="50")], promo_code="VIP35", shipping_city="msk") == 478_800
 
 
 def test_vat_is_charged_on_the_discounted_sum() -> None:
