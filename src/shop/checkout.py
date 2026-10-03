@@ -88,5 +88,7 @@ def calculate_order_total(
             tier_percent = percent
     promo_percent = PROMO_CODES.get(promo_code, 0)
     discount_percent = max(tier_percent, promo_percent)
+    if discount_percent > MAX_DISCOUNT_PERCENT:
+        discount_percent = MAX_DISCOUNT_PERCENT
     base = subtotal - percent_of(subtotal, discount_percent)
     return base + percent_of(base, VAT_PERCENT)
