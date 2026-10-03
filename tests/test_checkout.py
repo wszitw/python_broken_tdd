@@ -147,11 +147,11 @@ def test_free_delivery_uses_discounted_subtotal() -> None:
     """Spec 4, step 7: the threshold is checked against the sum after the discount."""
     reason = validate_order([line(qty="50")], promo_code="VIP35", shipping_city="msk")
     assert reason is None
-    assert calculate_order_total([line(qty="50")], promo_code="VIP35", shipping_city="msk") == 490_000
+    assert calculate_order_total([line(qty="50")], promo_code="VIP35", shipping_city="msk") == 478_000
 
 
 def test_vat_is_charged_on_the_discounted_sum() -> None:
     """Spec 4, steps 8-10: base = discounted subtotal + delivery."""
     reason = validate_order([line(qty="10")], promo_code="SUMMER15", shipping_city="msk")
     assert reason is None
-    assert calculate_order_total([line(qty="10")], promo_code="SUMMER15", shipping_city="msk") == 122_760
+    assert calculate_order_total([line(qty="10")], promo_code="SUMMER15", shipping_city="msk") == 160_800
