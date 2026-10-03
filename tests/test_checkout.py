@@ -49,8 +49,9 @@ def test_missing_line_key_is_rejected() -> None:
 
 def test_non_numeric_quantity_is_rejected() -> None:
     """Spec 3, rule 4: `qty` must be a whole number."""
-    ...
-
+    reason = validate_order([line(qty="1.5")])
+    assert isinstance(reason, str) and reason
+    assert calculate_order_total([line(qty="1.5")]) is None
 
 def test_zero_quantity_is_rejected() -> None:
     """Spec 3, rule 5: `qty` must be greater than zero."""
