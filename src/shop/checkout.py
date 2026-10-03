@@ -25,27 +25,37 @@ def _is_int_text(value: str) -> bool:
     return text != "" and all(part.isascii() and part.isdigit() for part in text.split("_"))
 
 
+def _line_rejection(raw: dict[str, str], index: int) -> str | None:
+    """Reject a single order line, or None if the line is fine."""
+    for key in REQUIRED_LINE_KEYS:
+        if key not in raw:
+            return f"missing key in line {index}"
+    if not raw["sku"]:
+        return "empty sku"
+    if not _is_int_text(raw["qty"]):
+        return "invalid qty"
+    if int(raw["qty"]) <= 0:
+        return "invalid qty"
+    if not _is_int_text(raw["unit_price_kopecks"]):
+        return "invalid price"
+    if int(raw["unit_price_kopecks"]) < 0:
+        return "invalid price"
+    return None
+
+
 def validate_order(
     lines: list[dict[str, str]],
     promo_code: str = "",
     shipping_city: str = "",
 ) -> str | None:
     """Return a human readable reason why the order is invalid, or None if it is fine."""
-    # Only the happy path exists yet: rejection rules arrive one by one with later tests.
+    # Rejection rules arrive one by one with later tests.
     if not lines:
         return "empty order"
     for index, raw in enumerate(lines, start=1):
-        for key in REQUIRED_LINE_KEYS:
-            if key not in raw:
-                return f"missing key in line {index}"
-        if not raw["sku"]:
-            return "empty sku"
-        if not _is_int_text(raw["qty"]):
-            return "invalid qty"
-        if int(raw["qty"]) <= 0:
-            return "invalid qty"
-        if not _is_int_text(raw["unit_price_kopecks"]):
-            return "invalid price"
+        rejection = _line_rejection(raw, index)
+        if rejection is not None:
+            return rejection
     return None
 
 
