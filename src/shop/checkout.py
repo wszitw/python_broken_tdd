@@ -44,6 +44,8 @@ def validate_order(
             return "invalid qty"
         if int(raw["qty"]) <= 0:
             return "invalid qty"
+        if not _is_int_text(raw["unit_price_kopecks"]):
+            return "invalid price"
     return None
 
 
