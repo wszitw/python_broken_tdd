@@ -26,7 +26,10 @@ def validate_order(
     # Only the happy path exists yet: rejection rules arrive one by one with later tests.
     if not lines:
         return "empty order"
-    for raw in lines:
+    for index, raw in enumerate(lines, start=1):
+        for key in REQUIRED_LINE_KEYS:
+            if key not in raw:
+                return f"missing key in line {index}"
         if not raw["sku"]:
             return "empty sku"
     return None
