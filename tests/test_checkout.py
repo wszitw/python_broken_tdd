@@ -75,7 +75,9 @@ def test_negative_price_is_rejected() -> None:
 
 def test_duplicate_sku_is_rejected() -> None:
     """Spec 3, rule 8: the same article may appear only once."""
-    ...
+    reason = validate_order([line(sku="SKU1"), line(sku="SKU1")])
+    assert isinstance(reason, str) and reason
+    assert calculate_order_total([line(sku="SKU1"), line(sku="SKU1")]) is None
 
 
 def test_unknown_promo_code_is_rejected() -> None:
