@@ -5,6 +5,8 @@ Both functions below are stubs: their signature is final, the bodies are yours.
 Do not change the constants: the tests rely on them.
 """
 
+from shop.money import percent_of
+
 PROMO_CODES = {"WELCOME10": 10, "SUMMER15": 15, "VIP35": 35}
 SUPPORTED_CITIES = ("msk", "spb")
 MAX_DISCOUNT_PERCENT = 30
@@ -21,7 +23,8 @@ def validate_order(
     shipping_city: str = "",
 ) -> str | None:
     """Return a human readable reason why the order is invalid, or None if it is fine."""
-    ...
+    # Only the happy path exists yet: rejection rules arrive one by one with later tests.
+    return None
 
 
 def calculate_order_total(
@@ -30,4 +33,10 @@ def calculate_order_total(
     shipping_city: str = "",
 ) -> int | None:
     """Return the order total in kopecks, or None if the order is invalid."""
-    ...
+    # Only the smoke case exists yet: subtotal plus VAT, no discounts or delivery.
+    if validate_order(lines, promo_code, shipping_city) is not None:
+        return None
+    subtotal = 0
+    for raw in lines:
+        subtotal += int(raw["qty"]) * int(raw["unit_price_kopecks"])
+    return subtotal + percent_of(subtotal, VAT_PERCENT)
