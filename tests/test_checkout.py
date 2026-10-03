@@ -108,10 +108,11 @@ def test_no_discount_below_first_tier() -> None:
     assert reason is None
     assert calculate_order_total([line(qty="9")]) == 108_000
 
-
 def test_tier_discount_at_first_threshold() -> None:
     """Spec 4, steps 2-5: 10 units give 5%. Compare with example 2."""
-    ...
+    reason = validate_order([line(qty="10")])
+    assert reason is None
+    assert calculate_order_total([line(qty="10")]) == 114_000
 
 
 def test_tier_discount_at_highest_threshold() -> None:
