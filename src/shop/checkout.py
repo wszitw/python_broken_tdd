@@ -73,10 +73,18 @@ def calculate_order_total(
     shipping_city: str = "",
 ) -> int | None:
     """Return the order total in kopecks, or None if the order is invalid."""
-    # Only the smoke case exists yet: subtotal plus VAT, no discounts or delivery.
+    # Discounts and delivery arrive one by one with later tests.
     if validate_order(lines, promo_code, shipping_city) is not None:
         return None
     subtotal = 0
+    total_qty = 0
     for raw in lines:
-        subtotal += int(raw["qty"]) * int(raw["unit_price_kopecks"])
-    return subtotal + percent_of(subtotal, VAT_PERCENT)
+        qty = int(raw["qty"])
+        subtotal += qty * int(raw["unit_price_kopecks"])
+        total_qty += qty
+    tier_percent = 0
+    for threshold, percent in TIER_DISCOUNTS:
+        if total_qty >= threshold:
+            tier_percent = percent
+    base = subtotal - percent_of(subtotal, tier_percent)
+    return base + percent_of(base, VAT_PERCENT)
