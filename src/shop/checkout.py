@@ -42,6 +42,8 @@ def validate_order(
             return "empty sku"
         if not _is_int_text(raw["qty"]):
             return "invalid qty"
+        if int(raw["qty"]) <= 0:
+            return "invalid qty"
     return None
 
 
