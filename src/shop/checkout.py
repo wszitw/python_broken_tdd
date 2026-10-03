@@ -52,10 +52,14 @@ def validate_order(
     # Rejection rules arrive one by one with later tests.
     if not lines:
         return "empty order"
+    seen: set[str] = set()
     for index, raw in enumerate(lines, start=1):
         rejection = _line_rejection(raw, index)
         if rejection is not None:
             return rejection
+        if raw["sku"] in seen:
+            return "duplicate sku"
+        seen.add(raw["sku"])
     return None
 
 
