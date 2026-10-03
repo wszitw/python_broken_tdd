@@ -90,5 +90,9 @@ def calculate_order_total(
     discount_percent = max(tier_percent, promo_percent)
     if discount_percent > MAX_DISCOUNT_PERCENT:
         discount_percent = MAX_DISCOUNT_PERCENT
-    base = subtotal - percent_of(subtotal, discount_percent)
+    discounted = subtotal - percent_of(subtotal, discount_percent)
+    delivery = 0
+    if shipping_city and discounted < FREE_DELIVERY_FROM_KOPEKS:
+        delivery = SHIPPING_KOPEKS
+    base = discounted + delivery
     return base + percent_of(base, VAT_PERCENT)
