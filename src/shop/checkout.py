@@ -26,6 +26,9 @@ def validate_order(
     # Only the happy path exists yet: rejection rules arrive one by one with later tests.
     if not lines:
         return "empty order"
+    for raw in lines:
+        if not raw["sku"]:
+            return "empty sku"
     return None
 
 
