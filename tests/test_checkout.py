@@ -138,7 +138,9 @@ def test_discount_is_capped_at_thirty_percent() -> None:
 
 def test_delivery_is_charged_for_small_order() -> None:
     """Spec 4, steps 7-10: a city adds SHIPPING_KOPEKS and VAT is charged on it."""
-    ...
+    reason = validate_order([line(qty="1")], shipping_city="msk")
+    assert reason is None
+    assert calculate_order_total([line(qty="1")], shipping_city="msk") == 72_800
 
 
 def test_free_delivery_uses_discounted_subtotal() -> None:
