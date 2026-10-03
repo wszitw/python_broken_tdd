@@ -60,6 +60,8 @@ def validate_order(
         if raw["sku"] in seen:
             return "duplicate sku"
         seen.add(raw["sku"])
+    if promo_code and promo_code not in PROMO_CODES:
+        return "unknown promo code"
     return None
 
 
